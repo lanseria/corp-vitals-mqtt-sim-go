@@ -8,41 +8,34 @@ import (
 	"sort"
 	"time"
 
-	"corp-vitals-mqtt-sim-go/internal/model"
-	"corp-vitals-mqtt-sim-go/internal/mqtt"
+	"corp-vitals-sim-go/internal/model"
+	"corp-vitals-sim-go/internal/webhook"
 )
 
-// Manager 管理多台设备并提供 HTTP 控制接口
 type Manager struct {
 	devices map[string]*model.Device
-	mqtt    *mqtt.Client
+	webhook *webhook.Client
 }
 
-// NewManager 初始化并创建 5 个模拟设备
-func NewManager(mqttClient *mqtt.Client) *Manager {
+func NewManager(whClient *webhook.Client) *Manager {
 	m := &Manager{
 		devices: make(map[string]*model.Device),
-		mqtt:    mqttClient,
+		webhook: whClient,
 	}
 
-	// 模拟初始化 5 个设备
 	for i := 1; i <= 5; i++ {
 		id := fmt.Sprintf("DEV-VITAL-%03d", i)
 		m.devices[id] = model.NewDevice(id, "VitalBand-X1")
 	}
-
 	return m
 }
 
-// StartSimulation 启动周期性上报数据
 func (m *Manager) StartSimulation() {
-	ticker := time.NewTicker(5 * time.Second) // 每 5 秒上报一次
+	ticker := time.NewTicker(5 * time.Second)
 	go func() {
 		for range ticker.C {
 			for deviceID, d := range m.devices {
 				state := d.Snapshot()
-
-				// 封装符合云端接收格式的 Payload
 				payload := map[string]interface{}{
 					"deviceId":  deviceID,
 					"timestamp": time.Now().UnixMilli(),
@@ -50,7 +43,8 @@ func (m *Manager) StartSimulation() {
 				}
 
 				if data, err := json.Marshal(payload); err == nil {
-					m.mqtt.PublishTelemetry(deviceID, data)
+					// 启动协程推送数据，防止阻塞定时器
+					go m.webhook.SendData(data)
 				}
 			}
 		}
