@@ -7,7 +7,7 @@ import "sync"
 type DeviceState struct {
 	DeviceType  string `json:"deviceType"`  // 设备类型
 	DeviceID    string `json:"deviceId"`    // 设备编号
-	AlarmStatus string `json:"alarmStatus"` // 报警状态："无" 或者 "用户SOS报警"
+	AlarmStatus bool `json:"alarmStatus"` // 报警状态：false=无报警, true=SOS报警
 	Battery     int    `json:"battery"`     // 剩余电量 (0-100)
 	HeartRate   int    `json:"heartRate"`   // 心率
 	BloodOxygen int    `json:"bloodOxygen"` // 血氧 (0-100)
@@ -24,7 +24,7 @@ func NewDevice(id, deviceType string) *Device {
 		state: DeviceState{
 			DeviceID:    id,
 			DeviceType:  deviceType,
-			AlarmStatus: "无",
+			AlarmStatus: false,
 			Battery:     100, // 初始电量100%
 			HeartRate:   75,  // 初始心率 75 bpm
 			BloodOxygen: 98,  // 初始血氧 98%
@@ -44,9 +44,8 @@ func (d *Device) Update(updates DeviceState) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	if updates.AlarmStatus != "" {
-		d.state.AlarmStatus = updates.AlarmStatus
-	}
+	// AlarmStatus 是 bool 类型，false 和 true 都是有效值，所以总是更新
+	d.state.AlarmStatus = updates.AlarmStatus
 	if updates.Battery > 0 {
 		d.state.Battery = updates.Battery
 	}

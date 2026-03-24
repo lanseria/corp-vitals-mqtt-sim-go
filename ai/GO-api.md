@@ -39,7 +39,7 @@
   "vitals": {
     "deviceType": "VitalBand-X1",
     "deviceId": "DEV-VITAL-001",
-    "alarmStatus": "无",
+    "alarmStatus": false,
     "battery": 100,
     "heartRate": 75,
     "bloodOxygen": 98
@@ -53,7 +53,7 @@
 | `deviceId` | String | 设备编号 |
 | `timestamp` | Number | 数据上报时间戳 (毫秒级) |
 | `vitals.deviceType` | String | 设备类型名称 |
-| `vitals.alarmStatus`| String | 报警状态，枚举值：`"无"` 或 `"用户SOS报警"` |
+| `vitals.alarmStatus`| Boolean | 报警状态，`false`=无报警，`true`=SOS报警 |
 | `vitals.battery` | Number | 剩余电量，范围 0~100 (%) |
 | `vitals.heartRate` | Number | 心率，单位 bpm |
 | `vitals.bloodOxygen`| Number | 血氧饱和度，范围 0~100 (%) |
@@ -78,7 +78,7 @@
   {
     "deviceType": "VitalBand-X1",
     "deviceId": "DEV-VITAL-001",
-    "alarmStatus": "无",
+    "alarmStatus": false,
     "battery": 100,
     "heartRate": 75,
     "bloodOxygen": 98
@@ -86,7 +86,7 @@
   {
     "deviceType": "VitalBand-X1",
     "deviceId": "DEV-VITAL-002",
-    "alarmStatus": "无",
+    "alarmStatus": false,
     "battery": 100,
     "heartRate": 75,
     "bloodOxygen": 98

@@ -4,6 +4,7 @@ package device
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"sort"
 	"time"
@@ -23,9 +24,23 @@ func NewManager(whClient *webhook.Client) *Manager {
 		webhook: whClient,
 	}
 
+	// 初始化随机种子
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	for i := 1; i <= 5; i++ {
 		id := fmt.Sprintf("DEV-VITAL-%03d", i)
-		m.devices[id] = model.NewDevice(id, "VitalBand-X1")
+		device := model.NewDevice(id, "VitalBand-X1")
+
+		// 为每个设备设置随机属性
+		randomState := model.DeviceState{
+			Battery:     60 + r.Intn(41),     // 60-100
+			HeartRate:   60 + r.Intn(61),     // 60-120
+			BloodOxygen: 94 + r.Intn(7),      // 94-100
+			AlarmStatus: r.Intn(10) == 0,     // 10% 概率触发报警
+		}
+		device.Update(randomState)
+
+		m.devices[id] = device
 	}
 	return m
 }
