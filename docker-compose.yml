@@ -1,9 +1,10 @@
+# docker-compose.yml
 services:
   mqtt-app:
     build: .
     container_name: mqtt-app
     restart: unless-stopped
-    network_mode: host
+    network_mode: host # 如果是 host 模式则不需做改动，直接访问宿主机 8080
     env_file:
       - .env
     logging:

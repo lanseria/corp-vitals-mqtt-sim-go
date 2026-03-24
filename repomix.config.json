@@ -1,0 +1,36 @@
+{
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
+  "output": {
+    "filePath": "ai/project_context.xml",
+    "style": "xml",
+    "truncateBase64": false,
+    "copyToClipboard": false,
+    "directoryStructure": true
+  },
+  "include": [
+    "**/*.go",
+    "**/go.mod",
+    "**/*.sql",
+    "**/*.proto",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.md",
+    "**/*.sh",
+    "Dockerfile",
+    "docker-compose.yml"
+  ],
+
+  "ignore": {
+    "useGitignore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": [
+      "ai",
+      "public",
+      "repomix.config.json",
+      "repomix-instruction.md"
+    ]
+  },
+  "tokenCount": {
+    "encoding": "o200k_base"
+  }
+}

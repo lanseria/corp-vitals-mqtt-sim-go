@@ -1,4 +1,5 @@
-module mqtt-service-template
+// go.mod
+module corp-vitals-mqtt-sim-go
 
 go 1.24.0
 
