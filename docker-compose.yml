@@ -1,0 +1,13 @@
+services:
+  mqtt-app:
+    build: .
+    container_name: mqtt-app
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
